@@ -1,0 +1,140 @@
+package com.classconnect.classconnectapi.negocio.entidades;
+
+import java.sql.Date;
+import java.util.List;
+
+import com.classconnect.classconnectapi.negocio.enums.TipoPerfil;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Perfil {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String nome;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String senha;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TipoPerfil tipoPerfil;
+
+    @Column(nullable = false)
+    private Date dataCadastro;
+
+    @Column()
+    private Date dataAtualizacao;
+
+    @Column
+    private Date dataDesativacao;
+
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private Boolean ativo;
+
+    @OneToMany(mappedBy = "perfil")
+    private List<Comentario> comentarios;
+
+    @PrePersist
+    public void prePersist() {
+        this.dataCadastro = new Date(System.currentTimeMillis());
+        this.ativo = true;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.dataAtualizacao = new Date(System.currentTimeMillis());
+    }
+
+    // Getters e Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public TipoPerfil getTipoPerfil() {
+        return tipoPerfil;
+    }
+
+    public void setTipoPerfil(TipoPerfil tipoPerfil) {
+        this.tipoPerfil = tipoPerfil;
+    }
+
+    public Date getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(Date dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    public Date getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(Date dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
+
+    public Date getDataDesativacao() {
+        return dataDesativacao;
+    }
+
+    public void setDataDesativacao(Date dataDesativacao) {
+        this.dataDesativacao = dataDesativacao;
+    }
+
+    public Boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+}
