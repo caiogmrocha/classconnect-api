@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.classconnect.classconnectapi.comunicacao.dtos.AutenticacaoCadastrarDTO;
-import com.classconnect.classconnectapi.comunicacao.dtos.AutenticacaoLoginDTO;
+import com.classconnect.classconnectapi.comunicacao.dtos.requests.AutenticacaoCadastrarDTO;
+import com.classconnect.classconnectapi.comunicacao.dtos.requests.AutenticacaoLoginDTO;
+import com.classconnect.classconnectapi.comunicacao.dtos.responses.AutenticacaoLoginRespostaDTO;
 import com.classconnect.classconnectapi.dados.PerfilRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Perfil;
+import com.classconnect.classconnectapi.negocio.servicos.AutenticacaoService;
 
 import jakarta.validation.Valid;
 
@@ -26,12 +28,17 @@ public class AutenticacaoController {
     @Autowired
     private PerfilRepository perfilRepository;
 
+    @Autowired
+    private AutenticacaoService autenticacaoService;
+
     @PostMapping("/login")
-    public ResponseEntity<AutenticacaoLoginDTO> login(@RequestBody @Valid AutenticacaoLoginDTO body) {
+    public ResponseEntity<AutenticacaoLoginRespostaDTO> login(@RequestBody @Valid AutenticacaoLoginDTO body) {
         var authToken = new UsernamePasswordAuthenticationToken(body.email(), body.senha());
         var auth = this.authenticationManager.authenticate(authToken);
 
-        return ResponseEntity.ok().body(body);
+        var token = this.autenticacaoService.gerarToken((Perfil) auth.getPrincipal());
+
+        return ResponseEntity.ok().body(new AutenticacaoLoginRespostaDTO(token));
     }
 
     @PostMapping("/cadastrar")

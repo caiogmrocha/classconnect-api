@@ -1,4 +1,4 @@
-package com.classconnect.classconnectapi.comunicacao.dtos;
+package com.classconnect.classconnectapi.comunicacao.dtos.requests;
 
 import com.classconnect.classconnectapi.negocio.enums.TipoPerfil;
 
