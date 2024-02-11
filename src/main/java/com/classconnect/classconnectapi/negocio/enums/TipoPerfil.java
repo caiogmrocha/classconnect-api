@@ -4,13 +4,13 @@ public enum TipoPerfil {
     PROFESSOR("professor"),
     ALUNO("aluno");
 
-    private String value;
+    private String tipo;
 
-    TipoPerfil(String value) {
-        this.value = value;
+    TipoPerfil(String tipo) {
+        this.tipo = tipo;
     }
 
-    public String getValue() {
-        return value;
+    public String getTipo() {
+        return tipo;
     }
 }

@@ -1,7 +1,12 @@
 package com.classconnect.classconnectapi.negocio.entidades;
 
 import java.sql.Date;
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.classconnect.classconnectapi.negocio.enums.TipoPerfil;
 
@@ -20,7 +25,7 @@ import jakarta.persistence.PreUpdate;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Perfil {
+public class Perfil implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -136,5 +141,44 @@ public abstract class Perfil {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.getTipoPerfil() == TipoPerfil.PROFESSOR) {
+            return List.of(new SimpleGrantedAuthority("ROLE_PROFESSOR"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_ALUNO"));
+        }
+    }
+
+    @Override
+    public String getPassword() {
+        return this.getSenha();
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
