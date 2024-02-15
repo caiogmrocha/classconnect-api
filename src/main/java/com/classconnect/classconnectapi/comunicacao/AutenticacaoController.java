@@ -18,6 +18,8 @@ import com.classconnect.classconnectapi.negocio.entidades.Perfil;
 import com.classconnect.classconnectapi.negocio.servicos.AutenticacaoService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/perfis")
@@ -60,4 +62,10 @@ public class AutenticacaoController {
         return ResponseEntity.ok(null);
     }
 
+    @PutMapping("/{id}")
+    public String editar(@PathVariable String id, @RequestBody String entity) {
+        System.out.println("Editando perfil " + id);
+
+        return entity;
+    }
 }

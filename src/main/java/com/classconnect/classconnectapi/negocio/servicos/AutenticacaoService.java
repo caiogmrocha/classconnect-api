@@ -82,6 +82,7 @@ public class AutenticacaoService extends OncePerRequestFilter implements UserDet
 
         if (token != null && !token.isBlank()) {
             var email = this.validarToken(token);
+            System.out.println("email: " + email);
 
             UserDetails perfil = this.perfilRepository.findByEmail(email);
 
@@ -100,6 +101,6 @@ public class AutenticacaoService extends OncePerRequestFilter implements UserDet
             return "";
         }
 
-        return authorization.replace("Bearer", "");
+        return authorization.replace("Bearer ", "");
     }
 }
