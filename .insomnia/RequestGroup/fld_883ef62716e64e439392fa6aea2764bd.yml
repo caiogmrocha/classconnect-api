@@ -1,0 +1,10 @@
+_id: fld_883ef62716e64e439392fa6aea2764bd
+type: RequestGroup
+parentId: wrk_404bd6d716b0403fb7951bff5b9bb8c8
+modified: 1707673456922
+created: 1707673449450
+name: Autenticação
+description: ""
+environment: {}
+environmentPropertyOrder: null
+metaSortKey: -1707673449450

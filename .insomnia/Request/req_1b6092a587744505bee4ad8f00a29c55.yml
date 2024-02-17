@@ -1,0 +1,33 @@
+_id: req_1b6092a587744505bee4ad8f00a29c55
+type: Request
+parentId: fld_883ef62716e64e439392fa6aea2764bd
+modified: 1708182865952
+created: 1707681514257
+url: "{{url}}/api/perfis/cadastrar"
+name: Cadastrar
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"nome": "John Doe",
+    	"email": "john@doe.com",
+    	"senha": "password",
+    	"tipoPerfil": "ALUNO"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+  - name: User-Agent
+    value: insomnia/2023.5.8
+authentication: {}
+metaSortKey: -1707673860484
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

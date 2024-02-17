@@ -1,0 +1,38 @@
+_id: req_493ed681b01b453f8a2748d3d16c8192
+type: Request
+parentId: fld_088e1b32c5d1453cbec11910f2c57874
+modified: 1708035169486
+created: 1708034273261
+url: "{{url}}/api/perfis/1"
+name: Editar Perfil
+description: ""
+method: PUT
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_df499ecb2fe54cb09cdfa18332ce2d6a
+  - name: User-Agent
+    value: insomnia/2023.5.8
+    id: pair_407363f3cbb04e419c311886f1e1bfeb
+  - id: pair_fef39891f12f47b0b87a477a002b6c0f
+    name: Authorization
+    value: Bearer
+      eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjbGFzc2Nvbm5lY3QiLCJzdWIiOiJqb2huQGRvZS5jb20iLCJleHAiOjE3MDgwNDE2MTV9.J-OtY7M3pgSLMesKMJ69CPSwyXcJL423sIB1bUu-BJg
+    description: ""
+    disabled: false
+authentication: {}
+metaSortKey: -1708034327742
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
