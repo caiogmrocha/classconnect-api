@@ -1,5 +1,7 @@
 package com.classconnect.classconnectapi.comunicacao;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,7 @@ import com.classconnect.classconnectapi.comunicacao.dtos.requests.AutenticacaoLo
 import com.classconnect.classconnectapi.comunicacao.dtos.responses.AutenticacaoLoginRespostaDTO;
 import com.classconnect.classconnectapi.dados.PerfilRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Perfil;
+import com.classconnect.classconnectapi.negocio.enums.TipoPerfil;
 import com.classconnect.classconnectapi.negocio.servicos.AutenticacaoService;
 
 import jakarta.validation.Valid;
@@ -46,7 +49,10 @@ public class AutenticacaoController {
     @PostMapping("/cadastrar")
     public ResponseEntity<?> cadastrar(@RequestBody @Valid AutenticacaoCadastrarDTO body) {
         if (this.perfilRepository.findByEmail(body.email()) != null) {
-            return ResponseEntity.badRequest().body("Email já cadastrado");
+            // JSON
+            return ResponseEntity.badRequest().body(
+                Map.of("message", "Já existe um perfil cadastrado com o e-mail informado.")
+            );
         }
 
         var senhaEncriptada = new BCryptPasswordEncoder().encode(body.senha());
@@ -55,7 +61,7 @@ public class AutenticacaoController {
         perfil.setNome(body.nome());
         perfil.setEmail(body.email());
         perfil.setSenha(senhaEncriptada);
-        perfil.setTipoPerfil(body.tipoPerfil());
+        perfil.setTipoPerfil(TipoPerfil.valueOf(body.tipoPerfil()));
 
         this.perfilRepository.save(perfil);
 
