@@ -49,7 +49,6 @@ public class AutenticacaoController {
     @PostMapping("/cadastrar")
     public ResponseEntity<?> cadastrar(@RequestBody @Valid AutenticacaoCadastrarDTO body) {
         if (this.perfilRepository.findByEmail(body.email()) != null) {
-            // JSON
             return ResponseEntity.badRequest().body(
                 Map.of("message", "Já existe um perfil cadastrado com o e-mail informado.")
             );
