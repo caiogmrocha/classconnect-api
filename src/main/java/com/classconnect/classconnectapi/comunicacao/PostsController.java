@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.classconnect.classconnectapi.comunicacao.dtos.requests.PublicarPostDTO;
@@ -46,25 +47,6 @@ public class PostsController {
     @ModelAttribute PublicarPostDTO publicarPostDTO,
     @PathParam("idSala") Long idSala
   ) {
-    var arquivo = publicarPostDTO.arquivo();
-    var nomeArquivo = UUID.randomUUID().toString().concat(arquivo.getOriginalFilename().substring(arquivo.getOriginalFilename().lastIndexOf(".")));
-    var localizacaoArquivo = this.fileStorageLocation.resolve(nomeArquivo);
-    String uriArquivo;
-
-    try {
-      arquivo.transferTo(localizacaoArquivo);
-
-      uriArquivo = ServletUriComponentsBuilder
-        .fromCurrentContextPath()
-        .path("api/salas/{idSala}/posts/arquivos/")
-        .path(nomeArquivo)
-        .build(idSala)
-        .toString();
-    } catch (Exception e) {
-      e.printStackTrace();
-      return ResponseEntity.badRequest().body(Map.of("mensagem", "Erro ao salvar o arquivo"));
-    }
-
     var material = new Material();
 
     material.setTitulo(publicarPostDTO.titulo());
@@ -74,20 +56,37 @@ public class PostsController {
 
     List<Anexo> anexos = new ArrayList<Anexo>();
 
-    var anexo = new Anexo();
+    for (MultipartFile arquivo : publicarPostDTO.arquivos()) {
+      var nomeArquivo = UUID.randomUUID().toString().concat(arquivo.getOriginalFilename().substring(arquivo.getOriginalFilename().lastIndexOf(".")));
+      var localizacaoArquivo = this.fileStorageLocation.resolve(nomeArquivo);
+      String uriArquivo;
 
-    anexo.setCaminho(uriArquivo);
-    anexo.setExtensao(uriArquivo.substring(uriArquivo.lastIndexOf(".")));
-    anexo.setMimetype(arquivo.getContentType());
-    anexo.setMaterial(material);
+      try {
+        arquivo.transferTo(localizacaoArquivo);
 
-    anexos.add(anexo);
+        uriArquivo = ServletUriComponentsBuilder
+          .fromCurrentContextPath()
+          .path("api/salas/{idSala}/posts/arquivos/")
+          .path(nomeArquivo)
+          .build(idSala)
+          .toString();
+      } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.badRequest().body(Map.of("mensagem", "Erro ao salvar o arquivo"));
+      }
+
+      var anexo = new Anexo();
+
+      anexo.setCaminho(uriArquivo);
+      anexo.setExtensao(uriArquivo.substring(uriArquivo.lastIndexOf(".")));
+      anexo.setMimetype(arquivo.getContentType());
+      anexo.setMaterial(material);
+
+      anexos.add(anexo);
+    }
 
     this.anexosRepository.saveAll(anexos);
 
-    return ResponseEntity.ok(Map.of(
-      "mensagem", "Post publicado com sucesso",
-      "uriArquivo", uriArquivo
-    ));
+    return ResponseEntity.ok(Map.of("mensagem", "Post publicado com sucesso"));
   }
 }
