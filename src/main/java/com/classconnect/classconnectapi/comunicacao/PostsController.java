@@ -18,6 +18,7 @@ import com.classconnect.classconnectapi.dados.MateriaisRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Anexo;
 import com.classconnect.classconnectapi.negocio.entidades.Material;
 
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class PostsController {
 
   @PostMapping("/api/salas/{idSala}/posts")
   public ResponseEntity<Map<?,?>> publicarPost(
-    @ModelAttribute PublicarPostDTO publicarPostDTO,
+    @Valid @ModelAttribute PublicarPostDTO publicarPostDTO,
     @PathParam("idSala") Long idSala
   ) {
     var material = new Material();
