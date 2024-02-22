@@ -9,4 +9,7 @@ import jakarta.persistence.OneToMany;
 public class Professor extends Perfil {
     @OneToMany(mappedBy = "professor")
     private List<Sala> salas;
+
+    @OneToMany(mappedBy = "professor")
+    private List<Material> materiais;
 }
