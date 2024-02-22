@@ -6,9 +6,11 @@ import com.classconnect.classconnectapi.validacao.ValidMimeType;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 public record PublicarPostDTO(
     @NotBlank(message = "O campo \"titulo\" é obrigatório")
+    @Size(max = 100, message = "O campo \"titulo\" deve ter no máximo 100 caracteres")
     String titulo,
 
     @NotBlank(message = "O campo \"conteudo\" é obrigatório")
