@@ -19,6 +19,7 @@ import com.classconnect.classconnectapi.dados.MateriaisRepository;
 import com.classconnect.classconnectapi.dados.ProfessorRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Anexo;
 import com.classconnect.classconnectapi.negocio.entidades.Material;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.ProfessorNaoExisteException;
 
 @Service
 public class PostsService {
@@ -40,11 +41,11 @@ public class PostsService {
         .normalize();
   }
 
-  public void publicarPost(PublicarPostDTO publicarPostDTO, Long idSala, Long idPerfil) {
+  public void publicarPost(PublicarPostDTO publicarPostDTO, Long idSala, Long idPerfil) throws ProfessorNaoExisteException {
     var professor = this.professorRepository.findById(idPerfil);
 
     if (professor.isEmpty()) {
-      throw new RuntimeException("Professor não encontrado");
+      throw new ProfessorNaoExisteException(idPerfil);
     }
 
     var material = new Material();
