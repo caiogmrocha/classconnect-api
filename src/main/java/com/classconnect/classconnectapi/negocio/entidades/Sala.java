@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
@@ -47,6 +48,9 @@ public class Sala {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "sala_aluno", joinColumns = @JoinColumn(name = "sala_id"), inverseJoinColumns = @JoinColumn(name = "aluno_id"))
     private List<Aluno> alunos;
+
+    @OneToMany(mappedBy = "sala")
+    private List<Material> materiais;
 
     @Column(nullable = false, columnDefinition = "boolean default true")
     private boolean ativa;

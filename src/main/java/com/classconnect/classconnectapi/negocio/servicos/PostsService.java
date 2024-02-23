@@ -17,9 +17,12 @@ import com.classconnect.classconnectapi.configuracao.ArmazenamentoArquivosProper
 import com.classconnect.classconnectapi.dados.AnexosRepository;
 import com.classconnect.classconnectapi.dados.MateriaisRepository;
 import com.classconnect.classconnectapi.dados.ProfessorRepository;
+import com.classconnect.classconnectapi.dados.SalasRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Anexo;
+import com.classconnect.classconnectapi.negocio.entidades.Atividade;
 import com.classconnect.classconnectapi.negocio.entidades.Material;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.ProfessorNaoExisteException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoPertenceProfessorException;
 
 @Service
 public class PostsService {
@@ -27,6 +30,9 @@ public class PostsService {
 
   @Autowired
   private ProfessorRepository professorRepository;
+
+  @Autowired
+  private SalasRepository salasRepository;
 
   @Autowired
   private MateriaisRepository materiaisRepository;
@@ -41,20 +47,35 @@ public class PostsService {
         .normalize();
   }
 
-  public void publicarPost(PublicarPostDTO publicarPostDTO, Long idSala, Long idPerfil) throws ProfessorNaoExisteException {
+  public void publicarPost(PublicarPostDTO publicarPostDTO, Long idSala, Long idPerfil) throws ProfessorNaoExisteException, SalaNaoPertenceProfessorException {
     var professor = this.professorRepository.findById(idPerfil);
 
     if (professor.isEmpty()) {
       throw new ProfessorNaoExisteException(idPerfil);
     }
 
-    var material = new Material();
+    var sala = this.salasRepository.findByProfessorIdAndId(idPerfil, idSala);
 
-    material.setTitulo(publicarPostDTO.titulo());
-    material.setConteudo(publicarPostDTO.conteudo());
-    material.setProfessor(professor.get());
+    if (sala.isEmpty()) {
+      throw new SalaNaoPertenceProfessorException(idSala, idPerfil);
+    }
 
-    this.materiaisRepository.save(material);
+    Material post = publicarPostDTO.dataEntrega() != null
+      ? new Atividade()
+      : new Material();
+
+    post.setTitulo(publicarPostDTO.titulo());
+    post.setConteudo(publicarPostDTO.conteudo());
+    post.setProfessor(professor.get());
+    post.setSala(sala.get());
+
+    if (publicarPostDTO.dataEntrega() != null) {
+      ((Atividade) post).setDataEntrega(publicarPostDTO.dataEntrega());
+
+      this.materiaisRepository.save((Atividade) post);
+    } else {
+      this.materiaisRepository.save(post);
+    }
 
     List<Anexo> anexos = new ArrayList<Anexo>();
 
@@ -81,7 +102,7 @@ public class PostsService {
       anexo.setCaminho(uriArquivo);
       anexo.setExtensao(uriArquivo.substring(uriArquivo.lastIndexOf(".")));
       anexo.setMimetype(arquivo.getContentType());
-      anexo.setMaterial(material);
+      anexo.setMaterial(post);
 
       anexos.add(anexo);
     }

@@ -1,9 +1,13 @@
 package com.classconnect.classconnectapi.comunicacao.dtos.requests;
 
+import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.classconnect.classconnectapi.validacao.ValidMimeType;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -15,6 +19,10 @@ public record PublicarPostDTO(
 
     @NotBlank(message = "O campo \"conteudo\" é obrigatório")
     String conteudo,
+
+    @Future(message = "A data de entrega deve ser no futuro")
+    @DateTimeFormat(pattern = "yyyy-MM-dd' 'HH:mm:ss")
+    LocalDateTime dataEntrega,
 
     @NotEmpty(message = "O campo \"arquivos\" é obrigatório")
     @ValidMimeType(value = {
