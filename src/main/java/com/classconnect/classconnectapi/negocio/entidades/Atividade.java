@@ -1,6 +1,7 @@
 package com.classconnect.classconnectapi.negocio.entidades;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,16 +17,16 @@ public class Atividade extends Material {
     private Long id;
 
     @Column
-    private Date dataEntrega;
+    private LocalDateTime dataEntrega;
 
     @OneToOne(mappedBy = "atividade")
     private RespostaAtividade resposta;
 
-    public Date getDataEntrega() {
+    public LocalDateTime getDataEntrega() {
         return dataEntrega;
     }
 
-    public void setDataEntrega(Date dataEntrega) {
+    public void setDataEntrega(LocalDateTime dataEntrega) {
         this.dataEntrega = dataEntrega;
     }
 }

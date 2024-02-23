@@ -18,6 +18,7 @@ import com.classconnect.classconnectapi.dados.AnexosRepository;
 import com.classconnect.classconnectapi.dados.MateriaisRepository;
 import com.classconnect.classconnectapi.dados.ProfessorRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Anexo;
+import com.classconnect.classconnectapi.negocio.entidades.Atividade;
 import com.classconnect.classconnectapi.negocio.entidades.Material;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.ProfessorNaoExisteException;
 
@@ -48,13 +49,21 @@ public class PostsService {
       throw new ProfessorNaoExisteException(idPerfil);
     }
 
-    var material = new Material();
+    Material post = publicarPostDTO.dataEntrega() != null
+      ? new Atividade()
+      : new Material();
 
-    material.setTitulo(publicarPostDTO.titulo());
-    material.setConteudo(publicarPostDTO.conteudo());
-    material.setProfessor(professor.get());
+    post.setTitulo(publicarPostDTO.titulo());
+    post.setConteudo(publicarPostDTO.conteudo());
+    post.setProfessor(professor.get());
 
-    this.materiaisRepository.save(material);
+    if (publicarPostDTO.dataEntrega() != null) {
+      ((Atividade) post).setDataEntrega(publicarPostDTO.dataEntrega());
+
+      this.materiaisRepository.save((Atividade) post);
+    } else {
+      this.materiaisRepository.save(post);
+    }
 
     List<Anexo> anexos = new ArrayList<Anexo>();
 
@@ -81,7 +90,7 @@ public class PostsService {
       anexo.setCaminho(uriArquivo);
       anexo.setExtensao(uriArquivo.substring(uriArquivo.lastIndexOf(".")));
       anexo.setMimetype(arquivo.getContentType());
-      anexo.setMaterial(material);
+      anexo.setMaterial(post);
 
       anexos.add(anexo);
     }
