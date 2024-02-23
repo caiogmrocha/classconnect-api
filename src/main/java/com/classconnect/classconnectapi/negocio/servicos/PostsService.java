@@ -17,10 +17,12 @@ import com.classconnect.classconnectapi.configuracao.ArmazenamentoArquivosProper
 import com.classconnect.classconnectapi.dados.AnexosRepository;
 import com.classconnect.classconnectapi.dados.MateriaisRepository;
 import com.classconnect.classconnectapi.dados.ProfessorRepository;
+import com.classconnect.classconnectapi.dados.SalasRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Anexo;
 import com.classconnect.classconnectapi.negocio.entidades.Atividade;
 import com.classconnect.classconnectapi.negocio.entidades.Material;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.ProfessorNaoExisteException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoPertenceProfessorException;
 
 @Service
 public class PostsService {
@@ -28,6 +30,9 @@ public class PostsService {
 
   @Autowired
   private ProfessorRepository professorRepository;
+
+  @Autowired
+  private SalasRepository salasRepository;
 
   @Autowired
   private MateriaisRepository materiaisRepository;
@@ -42,11 +47,17 @@ public class PostsService {
         .normalize();
   }
 
-  public void publicarPost(PublicarPostDTO publicarPostDTO, Long idSala, Long idPerfil) throws ProfessorNaoExisteException {
+  public void publicarPost(PublicarPostDTO publicarPostDTO, Long idSala, Long idPerfil) throws ProfessorNaoExisteException, SalaNaoPertenceProfessorException {
     var professor = this.professorRepository.findById(idPerfil);
 
     if (professor.isEmpty()) {
       throw new ProfessorNaoExisteException(idPerfil);
+    }
+
+    var sala = this.salasRepository.findByProfessorIdAndId(idPerfil, idSala);
+
+    if (sala.isEmpty()) {
+      throw new SalaNaoPertenceProfessorException(idSala, idPerfil);
     }
 
     Material post = publicarPostDTO.dataEntrega() != null
@@ -56,6 +67,7 @@ public class PostsService {
     post.setTitulo(publicarPostDTO.titulo());
     post.setConteudo(publicarPostDTO.conteudo());
     post.setProfessor(professor.get());
+    post.setSala(sala.get());
 
     if (publicarPostDTO.dataEntrega() != null) {
       ((Atividade) post).setDataEntrega(publicarPostDTO.dataEntrega());

@@ -20,7 +20,6 @@ public record PublicarPostDTO(
     @NotBlank(message = "O campo \"conteudo\" é obrigatório")
     String conteudo,
 
-    // @Future(message = "A data de entrega deve ser no futuro")
     @Future(message = "A data de entrega deve ser no futuro")
     @DateTimeFormat(pattern = "yyyy-MM-dd' 'HH:mm:ss")
     LocalDateTime dataEntrega,

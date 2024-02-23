@@ -52,10 +52,13 @@ public class Material {
   @OneToMany(mappedBy = "material")
   private List<Curtida> curtidas;
 
-
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "professor_id", referencedColumnName = "id")
   private Professor professor;
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "sala_id", referencedColumnName = "id")
+  private Sala sala;
 
   public Material() {
     this.anexos = new ArrayList<Anexo>();
@@ -160,6 +163,14 @@ public class Material {
 
   public void setProfessor(Professor professor) {
     this.professor = professor;
+  }
+
+  public Sala getSala() {
+    return sala;
+  }
+
+  public void setSala(Sala sala) {
+    this.sala = sala;
   }
 
   @Override
