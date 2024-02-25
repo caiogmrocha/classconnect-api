@@ -11,21 +11,21 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 public class Atividade extends Material {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column
-    private LocalDateTime dataEntrega;
+  @Column
+  private LocalDateTime dataEntrega;
 
-    @OneToOne(mappedBy = "atividade")
-    private RespostaAtividade resposta;
+  @OneToOne(mappedBy = "atividade")
+  private RespostaAtividade resposta;
 
-    public LocalDateTime getDataEntrega() {
-        return dataEntrega;
-    }
+  public LocalDateTime getDataEntrega() {
+    return dataEntrega;
+  }
 
-    public void setDataEntrega(LocalDateTime dataEntrega) {
-        this.dataEntrega = dataEntrega;
-    }
+  public void setDataEntrega(LocalDateTime dataEntrega) {
+    this.dataEntrega = dataEntrega;
+  }
 }
