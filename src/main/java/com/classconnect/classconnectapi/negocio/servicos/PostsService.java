@@ -13,15 +13,24 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.classconnect.classconnectapi.comunicacao.dtos.requests.PublicarPostDTO;
+import com.classconnect.classconnectapi.comunicacao.dtos.requests.ResponderAtividadeDTO;
 import com.classconnect.classconnectapi.configuracao.ArmazenamentoArquivosPropertiesConfiguration;
+import com.classconnect.classconnectapi.dados.AlunosRepository;
 import com.classconnect.classconnectapi.dados.AnexosRepository;
 import com.classconnect.classconnectapi.dados.MateriaisRepository;
 import com.classconnect.classconnectapi.dados.ProfessorRepository;
+import com.classconnect.classconnectapi.dados.RespostaAtividadeRepository;
 import com.classconnect.classconnectapi.dados.SalasRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Anexo;
 import com.classconnect.classconnectapi.negocio.entidades.Atividade;
 import com.classconnect.classconnectapi.negocio.entidades.Material;
+import com.classconnect.classconnectapi.negocio.entidades.RespostaAtividade;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.AlunoNaoPertenceSalaException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.PostNaoAtividadeException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.PostNaoExisteException;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.ProfessorNaoExisteException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.RespostaAtividadeJaExisteException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoExisteException;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoPertenceProfessorException;
 
 @Service
@@ -32,6 +41,9 @@ public class PostsService {
   private ProfessorRepository professorRepository;
 
   @Autowired
+  private AlunosRepository alunosRepository;
+
+  @Autowired
   private SalasRepository salasRepository;
 
   @Autowired
@@ -39,6 +51,9 @@ public class PostsService {
 
   @Autowired
   private AnexosRepository anexosRepository;
+
+  @Autowired
+  private RespostaAtividadeRepository respostaAtividadeRepository;
 
   public PostsService(ArmazenamentoArquivosPropertiesConfiguration fileStorageProperties) {
     this.fileStorageLocation = Paths
@@ -103,6 +118,84 @@ public class PostsService {
       anexo.setExtensao(uriArquivo.substring(uriArquivo.lastIndexOf(".")));
       anexo.setMimetype(arquivo.getContentType());
       anexo.setMaterial(post);
+
+      anexos.add(anexo);
+    }
+
+    this.anexosRepository.saveAll(anexos);
+  }
+
+  public void responderAtividade(ResponderAtividadeDTO responderAtividadeDTO, Long idSala, Long idAtividade, Long idAluno) throws SalaNaoExisteException, AlunoNaoPertenceSalaException, PostNaoExisteException, PostNaoAtividadeException, RespostaAtividadeJaExisteException {
+    // Verificar se a sala existe
+    var sala = this.salasRepository.findById(idSala);
+
+    if (sala.isEmpty()) {
+      throw new SalaNaoExisteException(idSala);
+    }
+
+    // Verificar se o usuário logado pertece a sala
+    var alunoPertenceSala = this.salasRepository.countByAlunoIdAndId(idAluno, idSala);
+
+    if (alunoPertenceSala == 0) {
+      throw new AlunoNaoPertenceSalaException(idSala, idAluno);
+    }
+
+    // Verificar se o post existe na sala
+    var atividade = this.materiaisRepository.findBySalaIdAndId(idSala, idAtividade);
+
+    if (atividade.isEmpty()) {
+      throw new PostNaoExisteException(idAluno);
+    }
+
+    // Verificar se o post é uma atividade
+    if (!(atividade.get() instanceof Atividade)) {
+      throw new PostNaoAtividadeException(idAluno);
+    }
+
+    // Verificar se o aluno já respondeu a atividade
+    var respostaAtividadeAnterior = this.respostaAtividadeRepository.findByAtividadeIdAndAlunoId(idAtividade, idAluno);
+
+    if (respostaAtividadeAnterior.isPresent()) {
+      throw new RespostaAtividadeJaExisteException(idAtividade, idAluno);
+    }
+
+    var respostaAtividade = new RespostaAtividade();
+    var aluno = this.alunosRepository.findById(idAluno);
+
+    respostaAtividade.setAluno(aluno.get());
+    respostaAtividade.setAtividade((Atividade) atividade.get());
+    respostaAtividade.setSala(sala.get());
+    respostaAtividade.setTitulo(responderAtividadeDTO.titulo());
+    respostaAtividade.setConteudo(responderAtividadeDTO.conteudo());
+
+    this.materiaisRepository.save(respostaAtividade);
+
+    List<Anexo> anexos = new ArrayList<Anexo>();
+
+    for (MultipartFile arquivo : responderAtividadeDTO.arquivos()) {
+      var nomeArquivo = UUID.randomUUID().toString().concat(arquivo.getOriginalFilename().substring(arquivo.getOriginalFilename().lastIndexOf(".")));
+      var localizacaoArquivo = this.fileStorageLocation.resolve(nomeArquivo);
+      String uriArquivo;
+
+      try {
+        arquivo.transferTo(localizacaoArquivo);
+
+        uriArquivo = ServletUriComponentsBuilder
+          .fromCurrentContextPath()
+          .path("api/salas/{idSala}/posts/{idAtividade}/respostas/")
+          .path(nomeArquivo)
+          .build(idSala, idAtividade)
+          .toString();
+      } catch (IOException e) {
+        throw new RuntimeException("Erro ao salvar o arquivo", e);
+      }
+
+      var anexo = new Anexo();
+
+      anexo.setCaminho(uriArquivo);
+      anexo.setExtensao(uriArquivo.substring(uriArquivo.lastIndexOf(".")));
+      anexo.setMimetype(arquivo.getContentType());
+      anexo.setMaterial(atividade.get());
 
       anexos.add(anexo);
     }

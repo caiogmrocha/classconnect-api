@@ -5,13 +5,18 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.classconnect.classconnectapi.comunicacao.dtos.requests.PublicarPostDTO;
+import com.classconnect.classconnectapi.comunicacao.dtos.requests.ResponderAtividadeDTO;
 import com.classconnect.classconnectapi.negocio.entidades.Perfil;
 import com.classconnect.classconnectapi.negocio.servicos.PostsService;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.AlunoNaoPertenceSalaException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.PostNaoAtividadeException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.PostNaoExisteException;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.ProfessorNaoExisteException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.RespostaAtividadeJaExisteException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoExisteException;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoPertenceProfessorException;
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,24 +31,49 @@ public class PostsController {
   private PostsService postsService;
 
   @PostMapping("/api/salas/{idSala}/posts")
-  public ResponseEntity<Map<?,?>> publicarPost(
-    @Valid @ModelAttribute PublicarPostDTO publicarPostDTO,
-    @PathVariable("idSala") Long idSala
-  ) {
+  public ResponseEntity<Map<?, ?>> publicarPost(
+      @Valid @ModelAttribute PublicarPostDTO publicarPostDTO,
+      @PathVariable("idSala") Long idSala) {
     try {
       var perfil = (Perfil) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
       this.postsService.publicarPost(publicarPostDTO, idSala, perfil.getId());
 
       return ResponseEntity.ok(Map.of("mensagem", "Post publicado com sucesso"));
-    } catch(ProfessorNaoExisteException e) {
+    } catch (ProfessorNaoExisteException e) {
       return ResponseEntity.badRequest().body(Map.of("mensagem", "Professor não existe"));
-    } catch(SalaNaoPertenceProfessorException e) {
-      return ResponseEntity.badRequest().body(Map.of("mensagem", "Sala não encontrada ou não pertence ao professor logado"));
-    } catch(Exception e) {
+    } catch (SalaNaoPertenceProfessorException e) {
+      return ResponseEntity.badRequest()
+          .body(Map.of("mensagem", "Sala não encontrada ou não pertence ao professor logado"));
+    } catch (Exception e) {
       e.printStackTrace();
 
       return ResponseEntity.badRequest().body(Map.of("mensagem", "Internal server error"));
+    }
+  }
+
+  @PostMapping("/api/salas/{idSala}/posts/{idAtividade}/respostas")
+  public ResponseEntity<Map<?,?>> responderAtividade(
+    @Valid @ModelAttribute ResponderAtividadeDTO responderAtividadeDTO,
+    @PathVariable("idSala") Long idSala,
+    @PathVariable("idAtividade") Long idAtividade
+  ) {
+    try {
+      var perfil = (Perfil) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+      this.postsService.responderAtividade(responderAtividadeDTO, idSala, idAtividade, perfil.getId());
+
+      return ResponseEntity.ok(Map.of("mensagem", "Resposta publicada com sucesso"));
+    } catch (SalaNaoExisteException e) {
+      return ResponseEntity.badRequest().body(Map.of("mensagem", "Sala não existe"));
+    } catch (PostNaoExisteException e) {
+      return ResponseEntity.badRequest().body(Map.of("mensagem", "Post não existe"));
+    } catch (AlunoNaoPertenceSalaException e) {
+      return ResponseEntity.badRequest().body(Map.of("mensagem", "Aluno não pertence à sala"));
+    } catch (PostNaoAtividadeException e) {
+      return ResponseEntity.badRequest().body(Map.of("mensagem", "Post não é uma atividade"));
+    } catch (RespostaAtividadeJaExisteException e) {
+      return ResponseEntity.badRequest().body(Map.of("mensagem", "Resposta para a atividade já existe"));
     }
   }
 }

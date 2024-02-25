@@ -55,10 +55,10 @@ public class AutenticacaoConfiguration {
                                                                 "/api/salas/{idSala}/posts/{idPost}")
                                                 .hasRole("PROFESSOR")
                                                 .requestMatchers(HttpMethod.GET,
-                                                                "/api/salas/{idSala}/posts/{idPost}/resposta/{idAluno}")
+                                                                "/api/salas/{idSala}/posts/{idAtividade}/respostas/{idAluno}")
                                                 .authenticated()
                                                 .requestMatchers(HttpMethod.POST,
-                                                                "/api/salas/{idSala}/posts/{idPost}/resposta")
+                                                                "/api/salas/{idSala}/posts/{idAtividade}/respostas")
                                                 .hasRole("ALUNO")
                                                 .requestMatchers(HttpMethod.GET,
                                                                 "/api/salas/{idSala}/posts/{idPost}/comentarios")
