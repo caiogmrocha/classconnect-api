@@ -14,7 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.classconnect.classconnectapi.comunicacao.dtos.requests.PublicarPostDTO;
 import com.classconnect.classconnectapi.comunicacao.dtos.requests.ResponderAtividadeDTO;
-import com.classconnect.classconnectapi.configuracao.ArmazenamentoArquivosPropertiesConfiguration;
 import com.classconnect.classconnectapi.dados.AlunosRepository;
 import com.classconnect.classconnectapi.dados.AnexosRepository;
 import com.classconnect.classconnectapi.dados.MateriaisRepository;
@@ -55,9 +54,9 @@ public class PostsService {
   @Autowired
   private RespostaAtividadeRepository respostaAtividadeRepository;
 
-  public PostsService(ArmazenamentoArquivosPropertiesConfiguration fileStorageProperties) {
+  public PostsService() {
     this.fileStorageLocation = Paths
-        .get(fileStorageProperties.getUploadDir())
+        .get("uploads")
         .toAbsolutePath()
         .normalize();
   }

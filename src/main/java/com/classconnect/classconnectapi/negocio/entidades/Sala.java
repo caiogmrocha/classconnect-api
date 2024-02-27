@@ -65,4 +65,92 @@ public class Sala {
     public void preUpdate() {
         this.dataAtualizacao = new Date(System.currentTimeMillis());
     }
+
+    public long getId() {
+      return id;
+    }
+
+    public void setId(long id) {
+      this.id = id;
+    }
+
+    public String getNome() {
+      return nome;
+    }
+
+    public void setNome(String nome) {
+      this.nome = nome;
+    }
+
+    public String getDescricao() {
+      return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+      this.descricao = descricao;
+    }
+
+    public String getCaminhoBanner() {
+      return caminhoBanner;
+    }
+
+    public void setCaminhoBanner(String caminhoBanner) {
+      this.caminhoBanner = caminhoBanner;
+    }
+
+    public Date getDataCadastro() {
+      return dataCadastro;
+    }
+
+    public void setDataCadastro(Date dataCadastro) {
+      this.dataCadastro = dataCadastro;
+    }
+
+    public Date getDataAtualizacao() {
+      return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(Date dataAtualizacao) {
+      this.dataAtualizacao = dataAtualizacao;
+    }
+
+    public Date getDataDesativacao() {
+      return dataDesativacao;
+    }
+
+    public void setDataDesativacao(Date dataDesativacao) {
+      this.dataDesativacao = dataDesativacao;
+    }
+
+    public Professor getProfessor() {
+      return professor;
+    }
+
+    public void setProfessor(Professor professor) {
+      this.professor = professor;
+    }
+
+    public List<Aluno> getAlunos() {
+      return alunos;
+    }
+
+    public void setAlunos(List<Aluno> alunos) {
+      this.alunos = alunos;
+    }
+
+    public List<Material> getMateriais() {
+      return materiais;
+    }
+
+    public void setMateriais(List<Material> materiais) {
+      this.materiais = materiais;
+    }
+
+    public boolean isAtiva() {
+      return ativa;
+    }
+
+    public void setAtiva(boolean ativa) {
+      this.ativa = ativa;
+    }
 }
