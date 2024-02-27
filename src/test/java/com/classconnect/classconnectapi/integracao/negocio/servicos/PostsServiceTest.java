@@ -1,5 +1,7 @@
 package com.classconnect.classconnectapi.integracao.negocio.servicos;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -88,5 +90,32 @@ public class PostsServiceTest {
     postsService.publicarPost(publicarPostDTO, 1L, 1L);
 
     verify(materiaisRepository, times(1)).save(any());
+  }
+
+  @Test
+  @DisplayName("não lançar uma ProfessorNaoExisteException caso o professor não exista")
+  public void publicarPostCaso2() throws ProfessorNaoExisteException, SalaNaoPertenceProfessorException {
+    when(professorRepository.findById(1L)).thenReturn(Optional.empty());
+
+    var sala = new Sala();
+
+    sala.setId(1L);
+    sala.setNome("Sala 1");
+
+    when(salasRepository.findByProfessorIdAndId(1L, 1L)).thenReturn(Optional.of(sala));
+
+    var publicarPostDTO = new PublicarPostDTO(
+      "Título",
+      "Descrição",
+      null,
+      new MultipartFile[]{}
+    );
+
+    ProfessorNaoExisteException exception = assertThrows(ProfessorNaoExisteException.class, () -> {
+      postsService.publicarPost(publicarPostDTO, 1L, 1L);
+    });
+
+    assertEquals(exception.getMessage(), "Não existe um professor cadastrado com o ID informado.");
+    assertEquals(exception.getId(), 1L);
   }
 }
