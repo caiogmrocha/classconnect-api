@@ -93,7 +93,7 @@ public class PostsServiceTest {
   }
 
   @Test
-  @DisplayName("não lançar uma ProfessorNaoExisteException caso o professor não exista")
+  @DisplayName("deve lançar uma ProfessorNaoExisteException caso o professor não exista")
   public void publicarPostCaso2() throws ProfessorNaoExisteException, SalaNaoPertenceProfessorException {
     when(professorRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -117,5 +117,41 @@ public class PostsServiceTest {
 
     assertEquals(exception.getMessage(), "Não existe um professor cadastrado com o ID informado.");
     assertEquals(exception.getId(), 1L);
+  }
+
+  @Test
+  @DisplayName("deve lançar uma SalaNaoPertenceProfessorException caso a sala não pertença ao professor")
+  public void publicarPostCaso3() throws ProfessorNaoExisteException, SalaNaoPertenceProfessorException {
+    var professor = new Professor();
+
+    professor.setId(1L);
+    professor.setNome("Professor");
+    professor.setEmail("professor@email.com");
+    professor.setSenha("senha");
+    professor.setTipoPerfil(TipoPerfil.PROFESSOR);
+
+    when(professorRepository.findById(1L)).thenReturn(Optional.of(professor));
+
+    var sala = new Sala();
+
+    sala.setId(1L);
+    sala.setNome("Sala 1");
+
+    when(salasRepository.findByProfessorIdAndId(1L, 1L)).thenReturn(Optional.empty());
+
+    var publicarPostDTO = new PublicarPostDTO(
+      "Título",
+      "Descrição",
+      null,
+      new MultipartFile[]{}
+    );
+
+    SalaNaoPertenceProfessorException exception = assertThrows(SalaNaoPertenceProfessorException.class, () -> {
+      postsService.publicarPost(publicarPostDTO, 1L, 1L);
+    });
+
+    assertEquals(exception.getMessage(), String.format("A sala com id %d não pertence ao professor com id %d", 1L, 1L));
+    assertEquals(exception.getIdProfessor(), 1L);
+    assertEquals(exception.getIdSala(), 1L);
   }
 }
