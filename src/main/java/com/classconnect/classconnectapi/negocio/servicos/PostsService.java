@@ -17,7 +17,7 @@ import com.classconnect.classconnectapi.comunicacao.dtos.requests.ResponderAtivi
 import com.classconnect.classconnectapi.dados.AlunosRepository;
 import com.classconnect.classconnectapi.dados.AnexosRepository;
 import com.classconnect.classconnectapi.dados.MateriaisRepository;
-import com.classconnect.classconnectapi.dados.ProfessorRepository;
+import com.classconnect.classconnectapi.dados.ProfessoresRepository;
 import com.classconnect.classconnectapi.dados.RespostaAtividadeRepository;
 import com.classconnect.classconnectapi.dados.SalasRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Anexo;
@@ -32,12 +32,18 @@ import com.classconnect.classconnectapi.negocio.servicos.excecoes.RespostaAtivid
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoExisteException;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoPertenceProfessorException;
 
+/**
+ * @author Caio Guilherme Moreira da Rocha
+ *
+ * Este serviço é responsável por lidar com as operações de posts,
+ * i.e., materiais e atividades.
+ */
 @Service
 public class PostsService {
   private final Path fileStorageLocation;
 
   @Autowired
-  private ProfessorRepository professorRepository;
+  private ProfessoresRepository professorRepository;
 
   @Autowired
   private AlunosRepository alunosRepository;
