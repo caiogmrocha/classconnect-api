@@ -22,7 +22,7 @@ import com.classconnect.classconnectapi.comunicacao.dtos.requests.PublicarPostDT
 import com.classconnect.classconnectapi.dados.AlunosRepository;
 import com.classconnect.classconnectapi.dados.AnexosRepository;
 import com.classconnect.classconnectapi.dados.MateriaisRepository;
-import com.classconnect.classconnectapi.dados.ProfessorRepository;
+import com.classconnect.classconnectapi.dados.ProfessoresRepository;
 import com.classconnect.classconnectapi.dados.RespostaAtividadeRepository;
 import com.classconnect.classconnectapi.dados.SalasRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Professor;
@@ -34,7 +34,7 @@ import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoPertenc
 
 public class PostsServiceTest {
   @Mock
-  private ProfessorRepository professorRepository;
+  private ProfessoresRepository professorRepository;
 
   @Mock
   private AlunosRepository alunosRepository;

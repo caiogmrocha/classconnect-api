@@ -23,7 +23,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.classconnect.classconnectapi.comunicacao.dtos.requests.AutenticacaoCadastrarDTO;
 import com.classconnect.classconnectapi.dados.AlunosRepository;
 import com.classconnect.classconnectapi.dados.PerfilRepository;
-import com.classconnect.classconnectapi.dados.ProfessorRepository;
+import com.classconnect.classconnectapi.dados.ProfessoresRepository;
 import com.classconnect.classconnectapi.negocio.entidades.Aluno;
 import com.classconnect.classconnectapi.negocio.entidades.Perfil;
 import com.classconnect.classconnectapi.negocio.entidades.Professor;
@@ -35,6 +35,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * @author Caio Guilherme Moreira da Rocha
+ *
+ * Este serviço é responsável por lidar com as operações de autenticação.
+ */
 @Service
 public class AutenticacaoService extends OncePerRequestFilter implements UserDetailsService {
   @Value("${api.security.jwt.secret}")
@@ -44,7 +49,7 @@ public class AutenticacaoService extends OncePerRequestFilter implements UserDet
   private PerfilRepository perfilRepository;
 
   @Autowired
-  private ProfessorRepository professorRepository;
+  private ProfessoresRepository professorRepository;
 
   @Autowired
   private AlunosRepository alunosRepository;
