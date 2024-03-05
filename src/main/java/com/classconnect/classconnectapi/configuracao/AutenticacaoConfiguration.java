@@ -55,6 +55,9 @@ public class AutenticacaoConfiguration {
                                                                 "/api/salas/{idSala}/posts/{idPost}")
                                                 .hasRole("PROFESSOR")
                                                 .requestMatchers(HttpMethod.GET,
+                                                                "/api/arquivos/{fileName:.+}")
+                                                .permitAll()
+                                                .requestMatchers(HttpMethod.GET,
                                                                 "/api/salas/{idSala}/posts/{idAtividade}/respostas/{idAluno}")
                                                 .authenticated()
                                                 .requestMatchers(HttpMethod.POST,

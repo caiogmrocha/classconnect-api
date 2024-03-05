@@ -141,9 +141,8 @@ public class PostsService {
 
         uriArquivo = ServletUriComponentsBuilder
           .fromCurrentContextPath()
-          .path("api/salas/{idSala}/posts/arquivos/")
+          .path("api/arquivos")
           .path(nomeArquivo)
-          .build(idSala)
           .toString();
       } catch (IOException e) {
         throw new RuntimeException("Erro ao salvar o arquivo", e);
@@ -219,9 +218,8 @@ public class PostsService {
 
         uriArquivo = ServletUriComponentsBuilder
           .fromCurrentContextPath()
-          .path("api/salas/{idSala}/posts/{idAtividade}/respostas/")
+          .path("api/arquivos")
           .path(nomeArquivo)
-          .build(idSala, idAtividade)
           .toString();
       } catch (IOException e) {
         throw new RuntimeException("Erro ao salvar o arquivo", e);
