@@ -42,4 +42,44 @@ public class Curtida {
     public void preUpdate() {
         this.dataAtualizacao = new Date(System.currentTimeMillis());
     }
+
+    public Long getId() {
+      return id;
+    }
+
+    public void setId(Long id) {
+      this.id = id;
+    }
+
+    public Material getMaterial() {
+      return material;
+    }
+
+    public void setMaterial(Material material) {
+      this.material = material;
+    }
+
+    public Aluno getAluno() {
+      return aluno;
+    }
+
+    public void setAluno(Aluno aluno) {
+      this.aluno = aluno;
+    }
+
+    public Date getDataCadastro() {
+      return dataCadastro;
+    }
+
+    public void setDataCadastro(Date dataCadastro) {
+      this.dataCadastro = dataCadastro;
+    }
+
+    public Date getDataAtualizacao() {
+      return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(Date dataAtualizacao) {
+      this.dataAtualizacao = dataAtualizacao;
+    }
 }

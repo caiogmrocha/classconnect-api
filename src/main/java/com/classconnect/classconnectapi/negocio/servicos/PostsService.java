@@ -83,6 +83,22 @@ public class PostsService {
     return posts;
   }
 
+  public Material detalharPost(Long idSala, Long idPost) throws SalaNaoExisteException, PostNaoExisteException {
+    var sala = this.salasRepository.findById(idSala);
+
+    if (sala.isEmpty()) {
+      throw new SalaNaoExisteException(idSala);
+    }
+
+    var post = this.materiaisRepository.findBySalaIdAndId(idSala, idPost);
+
+    if (post.isEmpty()) {
+      throw new PostNaoExisteException(idPost);
+    }
+
+    return post.get();
+  }
+
   public void publicarPost(PublicarPostDTO publicarPostDTO, Long idSala, Long idPerfil) throws ProfessorNaoExisteException, SalaNaoPertenceProfessorException {
     var professor = this.professorRepository.findById(idPerfil);
 
@@ -125,9 +141,8 @@ public class PostsService {
 
         uriArquivo = ServletUriComponentsBuilder
           .fromCurrentContextPath()
-          .path("api/salas/{idSala}/posts/arquivos/")
+          .path("api/arquivos")
           .path(nomeArquivo)
-          .build(idSala)
           .toString();
       } catch (IOException e) {
         throw new RuntimeException("Erro ao salvar o arquivo", e);
@@ -203,9 +218,8 @@ public class PostsService {
 
         uriArquivo = ServletUriComponentsBuilder
           .fromCurrentContextPath()
-          .path("api/salas/{idSala}/posts/{idAtividade}/respostas/")
+          .path("api/arquivos")
           .path(nomeArquivo)
-          .build(idSala, idAtividade)
           .toString();
       } catch (IOException e) {
         throw new RuntimeException("Erro ao salvar o arquivo", e);
