@@ -67,6 +67,22 @@ public class PostsService {
         .normalize();
   }
 
+  public List<Material> listarPosts(Long idSala) throws SalaNaoExisteException {
+    var sala = this.salasRepository.findById(idSala);
+
+    if (sala.isEmpty()) {
+      throw new SalaNaoExisteException(idSala);
+    }
+
+    var posts = this.materiaisRepository.findBySalaId(idSala);
+
+    if (posts.isEmpty()) {
+      return new ArrayList<Material>();
+    }
+
+    return posts;
+  }
+
   public void publicarPost(PublicarPostDTO publicarPostDTO, Long idSala, Long idPerfil) throws ProfessorNaoExisteException, SalaNaoPertenceProfessorException {
     var professor = this.professorRepository.findById(idPerfil);
 

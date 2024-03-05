@@ -19,22 +19,24 @@ public class SalasController {
 
   @GetMapping()
   public ResponseEntity<Map<?, ?>[]> listarSalas() {
-    var salas = this.salasService.listarSalas();
+    try {
+      var salas = this.salasService.listarSalas();
 
-    var salasDTO = salas.stream().map(sala -> {
-      var professor = sala.getProfessor();
+      var salasDTO = salas.stream().map(sala -> {
+        var professor = sala.getProfessor();
 
-      return Map.of(
-        "id", sala.getId(),
-        "nome", sala.getNome(),
-        "professor", Map.of(
-          "id", professor.getId(),
-          "nome", professor.getNome(),
-          "email", professor.getEmail()
-        )
-      );
-    }).toArray(Map[]::new);
+        return Map.of(
+            "id", sala.getId(),
+            "nome", sala.getNome(),
+            "professor", Map.of(
+                "id", professor.getId(),
+                "nome", professor.getNome(),
+                "email", professor.getEmail()));
+      }).toArray(Map[]::new);
 
-    return ResponseEntity.ok(salasDTO);
+      return ResponseEntity.ok(salasDTO);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(new Map[] {Map.of("mensagem", "Internal server error")});
+    }
   }
 }

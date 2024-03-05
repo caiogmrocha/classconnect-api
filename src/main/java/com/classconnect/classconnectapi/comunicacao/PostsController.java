@@ -24,13 +24,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
+@RequestMapping("/api/salas/{idSala}/posts")
 public class PostsController {
   @Autowired
   private PostsService postsService;
 
-  @PostMapping("/api/salas/{idSala}/posts")
+  @PostMapping()
   public ResponseEntity<Map<?, ?>> publicarPost(
       @Valid @ModelAttribute PublicarPostDTO publicarPostDTO,
       @PathVariable("idSala") Long idSala) {
@@ -52,12 +55,11 @@ public class PostsController {
     }
   }
 
-  @PostMapping("/api/salas/{idSala}/posts/{idAtividade}/respostas")
-  public ResponseEntity<Map<?,?>> responderAtividade(
-    @Valid @ModelAttribute ResponderAtividadeDTO responderAtividadeDTO,
-    @PathVariable("idSala") Long idSala,
-    @PathVariable("idAtividade") Long idAtividade
-  ) {
+  @PostMapping("/{idAtividade}/respostas")
+  public ResponseEntity<Map<?, ?>> responderAtividade(
+      @Valid @ModelAttribute ResponderAtividadeDTO responderAtividadeDTO,
+      @PathVariable("idSala") Long idSala,
+      @PathVariable("idAtividade") Long idAtividade) {
     try {
       var perfil = (Perfil) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -74,6 +76,30 @@ public class PostsController {
       return ResponseEntity.badRequest().body(Map.of("mensagem", "Post não é uma atividade"));
     } catch (RespostaAtividadeJaExisteException e) {
       return ResponseEntity.badRequest().body(Map.of("mensagem", "Resposta para a atividade já existe"));
+    }
+  }
+
+  @GetMapping()
+  public ResponseEntity<Map<?, ?>[]> listarPosts(@PathVariable Long idSala) throws SalaNaoExisteException {
+    try {
+      var posts = this.postsService.listarPosts(idSala);
+
+      if (posts.isEmpty()) {
+        return ResponseEntity.ok(new Map[] {});
+      }
+
+      var postsDTO = posts.stream().map(post -> {
+        return Map.of(
+          "id", post.getId()
+        );
+      }).toArray(Map[]::new);
+
+      return ResponseEntity.ok(postsDTO);
+    } catch (SalaNaoExisteException e) {
+      return ResponseEntity.badRequest().body(new Map[] {Map.of("mensagem", "Sala não existe")});
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.badRequest().body(new Map[] {Map.of("mensagem", "Internal server error")});
     }
   }
 }
