@@ -102,4 +102,38 @@ public class PostsController {
       return ResponseEntity.badRequest().body(new Map[] {Map.of("mensagem", "Internal server error")});
     }
   }
+
+  @GetMapping("/{idPost}")
+  public ResponseEntity<Map<?, ?>> detalharPost(@PathVariable Long idSala, @PathVariable Long idPost) {
+    try {
+      var post = this.postsService.detalharPost(idSala, idPost);
+
+      var postDTO = Map.of(
+        "id", post.getId(),
+        "titulo", post.getTitulo(),
+        "conteudo", post.getConteudo(),
+        "dataCadastro", post.getDataCadastro(),
+        "comentarios", post.getComentarios().stream().map(comentario -> Map.of(
+          "id", comentario.getId(),
+          "conteudo", comentario.getConteudo()
+        )).toArray(Map[]::new),
+        "curtidas", post.getCurtidas().size(),
+        "anexos", post.getAnexos().stream().map(anexo -> Map.of(
+          "id", anexo.getId(),
+          "caminho", anexo.getCaminho(),
+          "extensao", anexo.getExtensao(),
+          "mimetype", anexo.getMimetype()
+        )).toArray(Map[]::new)
+      );
+
+      return ResponseEntity.ok(postDTO);
+    } catch (SalaNaoExisteException e) {
+      return ResponseEntity.badRequest().body(Map.of("mensagem", "Sala não existe"));
+    } catch (PostNaoExisteException e) {
+      return ResponseEntity.badRequest().body(Map.of("mensagem", "Post não existe"));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.badRequest().body(Map.of("mensagem", "Internal server error"));
+    }
+  }
 }
