@@ -23,42 +23,42 @@ import jakarta.persistence.PreUpdate;
 public class Material {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  protected Long id;
 
   @Column(nullable = false)
-  private String titulo;
+  protected String titulo;
 
   @Column(nullable = false)
-  private String conteudo;
+  protected String conteudo;
 
   @Column(nullable = false)
-  private Date dataCadastro;
+  protected Date dataCadastro;
 
   @Column()
-  private Date dataAtualizacao;
+  protected Date dataAtualizacao;
 
   @Column
-  private Date dataArquivacao;
+  protected Date dataArquivacao;
 
   @Column(nullable = false, columnDefinition = "boolean default false")
-  private boolean arquivado;
+  protected boolean arquivado;
 
   @OneToMany(mappedBy = "material")
-  private List<Anexo> anexos;
+  protected List<Anexo> anexos;
 
   @OneToMany(mappedBy = "material")
-  private List<Comentario> comentarios;
+  protected List<Comentario> comentarios;
 
   @OneToMany(mappedBy = "material")
-  private List<Curtida> curtidas;
+  protected List<Curtida> curtidas;
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "professor_id", referencedColumnName = "id")
-  private Professor professor;
+  protected Professor professor;
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "sala_id", referencedColumnName = "id")
-  private Sala sala;
+  protected Sala sala;
 
   public Material() {
     this.anexos = new ArrayList<Anexo>();
@@ -78,7 +78,7 @@ public class Material {
   }
 
   public Long getId() {
-    return id;
+    return this.id;
   }
 
   public void setId(Long id) {
