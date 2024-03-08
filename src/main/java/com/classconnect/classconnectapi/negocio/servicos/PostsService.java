@@ -143,7 +143,7 @@ public class PostsService {
           .fromCurrentContextPath()
           .path("api/arquivos")
           .path(nomeArquivo)
-          .toString();
+          .toUriString();
       } catch (IOException e) {
         throw new RuntimeException("Erro ao salvar o arquivo", e);
       }

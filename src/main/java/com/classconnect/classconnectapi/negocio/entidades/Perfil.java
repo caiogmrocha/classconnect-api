@@ -28,35 +28,35 @@ import jakarta.persistence.PreUpdate;
 public class Perfil implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Column(nullable = false)
-    private String nome;
+    protected String nome;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    protected String email;
 
     @Column(nullable = false)
-    private String senha;
+    protected String senha;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TipoPerfil tipoPerfil;
+    protected TipoPerfil tipoPerfil;
 
     @Column(nullable = false)
-    private Date dataCadastro;
+    protected Date dataCadastro;
 
     @Column()
-    private Date dataAtualizacao;
+    protected Date dataAtualizacao;
 
     @Column
-    private Date dataDesativacao;
+    protected Date dataDesativacao;
 
     @Column(nullable = false, columnDefinition = "boolean default true")
-    private Boolean ativo;
+    protected Boolean ativo;
 
     @OneToMany(mappedBy = "perfil")
-    private List<Comentario> comentarios;
+    protected List<Comentario> comentarios;
 
     @PrePersist
     public void prePersist() {
