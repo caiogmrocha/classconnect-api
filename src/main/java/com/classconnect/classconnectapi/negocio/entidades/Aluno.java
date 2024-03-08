@@ -3,15 +3,11 @@ package com.classconnect.classconnectapi.negocio.entidades;
 import java.util.List;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 @Entity
 public class Aluno extends Perfil {
-  @Id
-  private Long id;
-
   @OneToMany(mappedBy = "aluno")
   private List<RespostaAtividade> respostasAtividades;
 
