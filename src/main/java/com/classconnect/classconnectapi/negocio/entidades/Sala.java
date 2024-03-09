@@ -10,8 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
@@ -45,9 +43,8 @@ public class Sala {
     @JoinColumn(name = "professor_id", referencedColumnName = "id")
     private Professor professor;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "sala_aluno", joinColumns = @JoinColumn(name = "sala_id"), inverseJoinColumns = @JoinColumn(name = "aluno_id"))
-    private List<Aluno> alunos;
+    @OneToMany(mappedBy = "sala")
+    private List<Matricula> matriculas;
 
     @OneToMany(mappedBy = "sala")
     private List<Material> materiais;
@@ -130,12 +127,12 @@ public class Sala {
       this.professor = professor;
     }
 
-    public List<Aluno> getAlunos() {
-      return alunos;
+    public List<Matricula> getMatriculas() {
+      return matriculas;
     }
 
-    public void setAlunos(List<Aluno> alunos) {
-      this.alunos = alunos;
+    public void setMatriculas(List<Matricula> matriculas) {
+      this.matriculas = matriculas;
     }
 
     public List<Material> getMateriais() {
