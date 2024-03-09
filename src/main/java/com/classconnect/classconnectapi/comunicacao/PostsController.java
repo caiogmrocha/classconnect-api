@@ -90,7 +90,20 @@ public class PostsController {
 
       var postsDTO = posts.stream().map(post -> {
         return Map.of(
-          "id", post.getId()
+          "id", post.getId(),
+          "titulo", post.getTitulo(),
+            "conteudo", post.getConteudo(),
+          "professor", Map.of(
+            "id", post.getProfessor().getId(),
+            "nome", post.getProfessor().getNome()
+          ),
+          "dataCadastro", post.getDataCadastro(),
+          "dataAtualizacao", post.getDataAtualizacao(),
+          "comentarios", post.getComentarios().stream().map(comentario -> Map.of(
+            "id", comentario.getId(),
+            "conteudo", comentario.getConteudo()
+          )).toArray(Map[]::new),
+          "curtidas", post.getCurtidas().size()
         );
       }).toArray(Map[]::new);
 

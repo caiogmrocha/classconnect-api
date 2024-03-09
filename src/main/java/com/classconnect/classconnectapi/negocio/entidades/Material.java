@@ -110,7 +110,7 @@ public class Material {
   }
 
   public Date getDataAtualizacao() {
-    return dataAtualizacao;
+    return dataAtualizacao == null ? dataCadastro : dataAtualizacao;
   }
 
   public void setDataAtualizacao(Date dataAtualizacao) {

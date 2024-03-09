@@ -47,7 +47,7 @@ public class ArquivosService {
 
       uriArquivo = ServletUriComponentsBuilder
         .fromCurrentContextPath()
-        .path("api/arquivos")
+        .path("api/arquivos/")
         .path(nomeArquivo)
         .toUriString();
     } catch (IOException e) {
