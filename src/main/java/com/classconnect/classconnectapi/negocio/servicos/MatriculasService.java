@@ -10,6 +10,8 @@ import com.classconnect.classconnectapi.negocio.entidades.Matricula;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.AlunoJaMatriculadoSalaException;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.AlunoNaoExisteException;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoExisteException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoPertenceProfessorException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.SolicitacaoMatriculaNaoExiste;
 
 @Service
 public class MatriculasService {
@@ -39,5 +41,29 @@ public class MatriculasService {
     sala.getMatriculas().add(matricula);
 
     this.matriculasRepository.save(matricula);
+  }
+
+  public void professorAceitarSolicitacao(Long idSala, Long idAluno, Long idProfessor) throws SalaNaoExisteException, AlunoNaoExisteException, SalaNaoPertenceProfessorException, SolicitacaoMatriculaNaoExiste, AlunoJaMatriculadoSalaException {
+    var sala = this.salasRepository.findById(idSala).orElseThrow(() -> new SalaNaoExisteException(idSala));
+
+    this.alunosRepository.findById(idAluno).orElseThrow(() -> new AlunoNaoExisteException(idAluno));
+
+    var professor = sala.getProfessor();
+
+    if (professor.getId() != idProfessor) {
+      throw new SalaNaoPertenceProfessorException(idSala, idProfessor);
+    }
+
+    var matricula = this.matriculasRepository.findBySalaIdAndAlunoId(idSala, idAluno).orElseThrow(() -> new SolicitacaoMatriculaNaoExiste(idAluno, idSala));
+
+    if (matricula.getDataConfirmacao() != null) {
+      throw new AlunoJaMatriculadoSalaException(idAluno, idSala);
+    }
+
+    matricula.setDataConfirmacao(java.time.LocalDateTime.now());
+
+    sala.getMatriculas().add(matricula);
+
+    this.salasRepository.save(sala);
   }
 }

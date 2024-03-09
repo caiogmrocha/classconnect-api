@@ -1,6 +1,6 @@
 package com.classconnect.classconnectapi.negocio.entidades;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +25,7 @@ public class Matricula {
   private Sala sala;
 
   @Column(nullable = true)
-  private Date dataConfirmacao;
+  private LocalDateTime dataConfirmacao;
 
   public Long getId() {
     return id;
@@ -51,11 +51,11 @@ public class Matricula {
     this.sala = sala;
   }
 
-  public Date getDataConfirmacao() {
+  public LocalDateTime getDataConfirmacao() {
     return dataConfirmacao;
   }
 
-  public void setDataConfirmacao(Date dataConfirmacao) {
+  public void setDataConfirmacao(LocalDateTime dataConfirmacao) {
     this.dataConfirmacao = dataConfirmacao;
   }
 
