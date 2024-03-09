@@ -31,7 +31,7 @@ public class SalasService {
     List<Sala> salas;
 
     if (perfil.getTipoPerfil().equals(TipoPerfil.ALUNO)) {
-      salas = salasRepository.findByAlunosId(perfil.getId());
+      salas = salasRepository.findByAlunoId(perfil.getId());
     } else {
       salas = salasRepository.findByProfessorId(perfil.getId());
     }

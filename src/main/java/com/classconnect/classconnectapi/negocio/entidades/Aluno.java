@@ -3,7 +3,6 @@ package com.classconnect.classconnectapi.negocio.entidades;
 import java.util.List;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -14,8 +13,8 @@ public class Aluno extends Perfil {
   @OneToMany(mappedBy = "aluno")
   private List<Curtida> curtidas;
 
-  @ManyToMany(mappedBy = "alunos")
-  private List<Sala> salas;
+  @OneToMany(mappedBy = "aluno")
+  private List<Matricula> matriculas;
 
   public Long getId() {
     return id;
@@ -41,11 +40,11 @@ public class Aluno extends Perfil {
     this.curtidas = curtidas;
   }
 
-  public List<Sala> getSalas() {
-    return salas;
+  public List<Matricula> getMatriculas() {
+    return matriculas;
   }
 
-  public void setSalas(List<Sala> salas) {
-    this.salas = salas;
+  public void setMatriculas(List<Matricula> matriculas) {
+    this.matriculas = matriculas;
   }
 }

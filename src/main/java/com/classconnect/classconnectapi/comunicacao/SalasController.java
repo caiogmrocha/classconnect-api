@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.classconnect.classconnectapi.comunicacao.dtos.requests.CadastrarSalaDTO;
 import com.classconnect.classconnectapi.negocio.entidades.Perfil;
-import com.classconnect.classconnectapi.negocio.entidades.Professor;
 import com.classconnect.classconnectapi.negocio.servicos.SalasService;
 
 import jakarta.validation.Valid;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/salas")
