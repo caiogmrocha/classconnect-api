@@ -13,6 +13,7 @@ import com.classconnect.classconnectapi.negocio.entidades.Perfil;
 import com.classconnect.classconnectapi.negocio.entidades.Sala;
 import com.classconnect.classconnectapi.negocio.enums.TipoPerfil;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.ProfessorNaoExisteException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoExisteException;
 
 @Service
 public class SalasService {
@@ -37,6 +38,10 @@ public class SalasService {
     }
 
     return salas;
+  }
+
+  public Sala buscarPorId(Long idSala) throws SalaNaoExisteException {
+    return this.salasRepository.findById(idSala).orElseThrow(() -> new SalaNaoExisteException(idSala));
   }
 
   public void cadastrarSala(CadastrarSalaDTO cadastrarSalaDTO, Long idPerfil) throws IOException, ProfessorNaoExisteException {

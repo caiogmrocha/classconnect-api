@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.classconnect.classconnectapi.comunicacao.dtos.requests.CadastrarSalaDTO;
 import com.classconnect.classconnectapi.negocio.entidades.Perfil;
 import com.classconnect.classconnectapi.negocio.servicos.SalasService;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoExisteException;
 
 import jakarta.validation.Valid;
 
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -35,6 +37,7 @@ public class SalasController {
         return Map.of(
             "id", sala.getId(),
             "nome", sala.getNome(),
+            "descricao", sala.getDescricao(),
             "professor", Map.of(
                 "id", professor.getId(),
                 "nome", professor.getNome(),
@@ -44,6 +47,30 @@ public class SalasController {
       return ResponseEntity.ok(salasDTO);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(new Map[] {Map.of("mensagem", "Internal server error")});
+    }
+  }
+
+  @GetMapping("/{idSala}")
+  public ResponseEntity<Map<?, ?>> buscarPorId(@PathVariable("idSala") Long idSala) {
+    try {
+      var sala = this.salasService.buscarPorId(idSala);
+
+      var professor = sala.getProfessor();
+
+      return ResponseEntity.ok(Map.of(
+          "id", sala.getId(),
+          "nome", sala.getNome(),
+          "descricao", sala.getDescricao(),
+          "professor", Map.of(
+              "id", professor.getId(),
+              "nome", professor.getNome(),
+              "email", professor.getEmail())));
+    } catch (SalaNaoExisteException e) {
+      return ResponseEntity.badRequest().body(Map.of("mensagem", "Sala não existe"));
+    } catch (Exception e) {
+      e.printStackTrace();
+
+      return ResponseEntity.badRequest().body(Map.of("mensagem", "Internal server error"));
     }
   }
 
