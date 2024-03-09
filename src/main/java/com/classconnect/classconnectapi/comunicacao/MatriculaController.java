@@ -94,4 +94,24 @@ public class MatriculaController {
         return ResponseEntity.badRequest().body(Map.of("mensagem", "Internal server error"));
       }
     }
+
+    @PatchMapping("/aceitar")
+    public ResponseEntity<Map<?,?>> alunoAceitarMatricula(@PathVariable Long idSala) {
+      var perfil = (Perfil) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+      try {
+        this.matriculaService.alunoAceitarMatricula(idSala, perfil.getId());
+
+        return ResponseEntity.ok(Map.of("mensagem", "Matrícula aceita"));
+      } catch (SalaNaoExisteException e) {
+        return ResponseEntity.badRequest().body(Map.of("mensagem", "Sala não existe"));
+      } catch (SolicitacaoMatriculaNaoExiste e) {
+        return ResponseEntity.badRequest().body(Map.of("mensagem", "Solicitação de matrícula não existe"));
+      } catch (AlunoJaMatriculadoSalaException e) {
+        return ResponseEntity.badRequest().body(Map.of("mensagem", "Aluno já matriculado na sala"));
+      } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.badRequest().body(Map.of("mensagem", "Internal server error"));
+      }
+    }
 }

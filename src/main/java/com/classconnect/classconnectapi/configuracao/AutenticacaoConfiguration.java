@@ -51,59 +51,42 @@ public class AutenticacaoConfiguration {
                                                 .hasRole("PROFESSOR")
                                                 .requestMatchers(HttpMethod.PUT, "/api/salas/{idSala}/posts/{idPost}")
                                                 .hasRole("PROFESSOR")
-                                                .requestMatchers(HttpMethod.DELETE,
-                                                                "/api/salas/{idSala}/posts/{idPost}")
+                                                .requestMatchers(HttpMethod.DELETE, "/api/salas/{idSala}/posts/{idPost}")
                                                 .hasRole("PROFESSOR")
-                                                .requestMatchers(HttpMethod.GET,
-                                                                "/api/arquivos/{fileName:.+}")
+                                                .requestMatchers(HttpMethod.GET, "/api/arquivos/{fileName:.+}")
                                                 .permitAll()
-                                                .requestMatchers(HttpMethod.GET,
-                                                                "/api/salas/{idSala}/posts/{idAtividade}/respostas/{idAluno}")
+                                                .requestMatchers(HttpMethod.GET, "/api/salas/{idSala}/posts/{idAtividade}/respostas/{idAluno}")
                                                 .authenticated()
-                                                .requestMatchers(HttpMethod.POST,
-                                                                "/api/salas/{idSala}/posts/{idAtividade}/respostas")
+                                                .requestMatchers(HttpMethod.POST, "/api/salas/{idSala}/posts/{idAtividade}/respostas")
                                                 .hasRole("ALUNO")
-                                                .requestMatchers(HttpMethod.GET,
-                                                                "/api/salas/{idSala}/posts/{idPost}/comentarios")
+                                                .requestMatchers(HttpMethod.GET, "/api/salas/{idSala}/posts/{idPost}/comentarios")
                                                 .authenticated()
-                                                .requestMatchers(HttpMethod.POST,
-                                                                "/api/salas/{idSala}/posts/{idPost}/comentarios")
+                                                .requestMatchers(HttpMethod.POST, "/api/salas/{idSala}/posts/{idPost}/comentarios")
                                                 .authenticated()
-                                                .requestMatchers(HttpMethod.DELETE,
-                                                                "/api/salas/{idSala}/posts/{idPost}/comentarios/{idComentario}")
+                                                .requestMatchers(HttpMethod.DELETE, "/api/salas/{idSala}/posts/{idPost}/comentarios/{idComentario}")
                                                 .authenticated()
-                                                .requestMatchers(HttpMethod.GET,
-                                                                "/api/salas/{idSala}/posts/{idPost}/curtidas/quantidade")
+                                                .requestMatchers(HttpMethod.GET, "/api/salas/{idSala}/posts/{idPost}/curtidas/quantidade")
                                                 .authenticated()
-                                                .requestMatchers(HttpMethod.PATCH,
-                                                                "/api/salas/{idSala}/posts/{idPost}/curtidas/curtir")
+                                                .requestMatchers(HttpMethod.PATCH, "/api/salas/{idSala}/posts/{idPost}/curtidas/curtir")
                                                 .authenticated()
-                                                .requestMatchers(HttpMethod.POST,
-                                                                "/api/salas/{iSala}/matriculas/solicitar/{idAluno}")
+                                                .requestMatchers(HttpMethod.POST, "/api/salas/{iSala}/matriculas/solicitar/{idAluno}")
                                                 .hasRole("PROFESSOR")
-                                                .requestMatchers(HttpMethod.PATCH,
-                                                                "/api/salas/{idSala}/matriculas/{idAluno}")
-                                                .authenticated()
-                                                .requestMatchers(HttpMethod.POST,
-                                                                "/api/salas/{iSala}/matriculas/solicitar")
+                                                .requestMatchers(HttpMethod.POST, "/api/salas/{iSala}/matriculas/solicitar")
                                                 .hasRole("ALUNO")
-                                                .requestMatchers(HttpMethod.DELETE,
-                                                                "/api/salas/{idSala}/matriculas/recusar")
+                                                .requestMatchers(HttpMethod.PATCH, "/api/salas/{idSala}/matriculas/aceitar/{idAluno}")
+                                                .hasRole("PROFESSOR")
+                                                .requestMatchers(HttpMethod.PATCH, "/api/salas/{idSala}/matriculas/aceitar")
                                                 .hasRole("ALUNO")
-                                                .requestMatchers(HttpMethod.DELETE,
-                                                                "/api/salas/{idSala}/matriculas/desfazer")
+
+                                                .requestMatchers(HttpMethod.DELETE, "/api/salas/{idSala}/matriculas/recusar")
                                                 .hasRole("ALUNO")
-                                                .requestMatchers(HttpMethod.POST,
-                                                                "/api/salas/{iSala}/matriculas/solicitar/{idAluno}")
+                                                .requestMatchers(HttpMethod.DELETE, "/api/salas/{idSala}/matriculas/desfazer")
+                                                .hasRole("ALUNO")
+                                                .requestMatchers(HttpMethod.POST, "/api/salas/{iSala}/matriculas/solicitar/{idAluno}")
                                                 .hasRole("PROFESSOR")
-                                                .requestMatchers(HttpMethod.PATCH,
-                                                                "/api/salas/{idSala}/matriculas/aceitar/{idAluno}")
+                                                .requestMatchers(HttpMethod.DELETE, "/api/salas/{idSala}/matriculas/recusar/{idAluno}")
                                                 .hasRole("PROFESSOR")
-                                                .requestMatchers(HttpMethod.DELETE,
-                                                                "/api/salas/{idSala}/matriculas/recusar/{idAluno}")
-                                                .hasRole("PROFESSOR")
-                                                .requestMatchers(HttpMethod.DELETE,
-                                                                "/api/salas/{idSala}/matriculas/desfazer/{idAluno}")
+                                                .requestMatchers(HttpMethod.DELETE, "/api/salas/{idSala}/matriculas/desfazer/{idAluno}")
                                                 .hasRole("PROFESSOR")
                                                 .anyRequest().authenticated())
                                 .addFilterBefore(this.autenticacaoService,
