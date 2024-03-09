@@ -29,7 +29,9 @@ public class MatriculasService {
 
     var aluno = this.alunosRepository.findById(idAluno).orElseThrow(() -> new AlunoNaoExisteException(idAluno));
 
-    if (this.salasRepository.countByAlunoIdAndId(idAluno, idSala) > 0) {
+    var matriculaAnterior = this.matriculasRepository.findBySalaIdAndAlunoId(idSala, idAluno);
+
+    if (matriculaAnterior.isPresent()) {
       throw new AlunoJaMatriculadoSalaException(idAluno, idSala);
     }
 
@@ -65,5 +67,30 @@ public class MatriculasService {
     sala.getMatriculas().add(matricula);
 
     this.salasRepository.save(sala);
+  }
+
+  public void professorSolicitarMatricula(Long idSala, Long idAluno, Long idProfessor) throws SalaNaoExisteException, AlunoNaoExisteException, AlunoJaMatriculadoSalaException, SalaNaoPertenceProfessorException {
+    var sala = this.salasRepository.findById(idSala).orElseThrow(() -> new SalaNaoExisteException(idSala));
+
+    var professor = sala.getProfessor();
+
+    if (professor.getId() != idProfessor) {
+      throw new SalaNaoPertenceProfessorException(idSala, idProfessor);
+    }
+
+    var aluno = this.alunosRepository.findById(idAluno).orElseThrow(() -> new AlunoNaoExisteException(idAluno));
+
+    if (this.matriculasRepository.findBySalaIdAndAlunoId(idSala, idAluno).isPresent()) {
+      throw new AlunoJaMatriculadoSalaException(idAluno, idSala);
+    }
+
+    var matricula = new Matricula();
+
+    matricula.setAluno(aluno);
+    matricula.setSala(sala);
+
+    sala.getMatriculas().add(matricula);
+
+    this.matriculasRepository.save(matricula);
   }
 }

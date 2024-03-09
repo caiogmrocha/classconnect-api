@@ -79,7 +79,7 @@ public class AutenticacaoConfiguration {
                                                                 "/api/salas/{idSala}/posts/{idPost}/curtidas/curtir")
                                                 .authenticated()
                                                 .requestMatchers(HttpMethod.POST,
-                                                                "/api/salas/{iSala}/matriculas/{idAluno}/convidar")
+                                                                "/api/salas/{iSala}/matriculas/solicitar/{idAluno}")
                                                 .hasRole("PROFESSOR")
                                                 .requestMatchers(HttpMethod.PATCH,
                                                                 "/api/salas/{idSala}/matriculas/{idAluno}")
