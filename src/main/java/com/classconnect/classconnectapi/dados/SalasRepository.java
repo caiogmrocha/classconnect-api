@@ -15,7 +15,4 @@ public interface SalasRepository extends JpaRepository<Sala, Long>{
 
   @Query("SELECT s FROM Sala s JOIN s.matriculas m WHERE m.aluno.id = ?1")
   public List<Sala> findByAlunoId(Long idAluno);
-
-  @Query("SELECT COUNT(s) FROM Sala s JOIN s.matriculas m WHERE m.aluno.id = ?1 AND m.sala.id = ?2")
-  public Long countByAlunoIdAndId(Long idAluno, Long idSala);
 }

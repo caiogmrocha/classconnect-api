@@ -17,6 +17,7 @@ import com.classconnect.classconnectapi.comunicacao.dtos.requests.ResponderAtivi
 import com.classconnect.classconnectapi.dados.AlunosRepository;
 import com.classconnect.classconnectapi.dados.AnexosRepository;
 import com.classconnect.classconnectapi.dados.MateriaisRepository;
+import com.classconnect.classconnectapi.dados.MatriculasRepository;
 import com.classconnect.classconnectapi.dados.ProfessoresRepository;
 import com.classconnect.classconnectapi.dados.RespostaAtividadeRepository;
 import com.classconnect.classconnectapi.dados.SalasRepository;
@@ -50,6 +51,9 @@ public class PostsService {
 
   @Autowired
   private SalasRepository salasRepository;
+
+  @Autowired
+  private MatriculasRepository matriculasRepository;
 
   @Autowired
   private MateriaisRepository materiaisRepository;
@@ -170,9 +174,9 @@ public class PostsService {
     }
 
     // Verificar se o usuário logado pertece a sala
-    var alunoPertenceSala = this.salasRepository.countByAlunoIdAndId(idAluno, idSala);
+    var matricula = this.matriculasRepository.findBySalaIdAndAlunoId(idSala, idAluno);
 
-    if (alunoPertenceSala == 0) {
+    if (matricula.isEmpty()) {
       throw new AlunoNaoPertenceSalaException(idSala, idAluno);
     }
 
