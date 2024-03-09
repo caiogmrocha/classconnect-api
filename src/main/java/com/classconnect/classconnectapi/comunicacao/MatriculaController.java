@@ -16,6 +16,7 @@ import com.classconnect.classconnectapi.negocio.servicos.excecoes.AlunoJaMatricu
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.AlunoNaoExisteException;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoExisteException;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.SalaNaoPertenceProfessorException;
+import com.classconnect.classconnectapi.negocio.servicos.excecoes.SolicitacaoMatriculaJaExisteException;
 import com.classconnect.classconnectapi.negocio.servicos.excecoes.SolicitacaoMatriculaNaoExiste;
 
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -86,6 +87,8 @@ public class MatriculaController {
         return ResponseEntity.badRequest().body(Map.of("mensagem", "Aluno não existe"));
       } catch (SalaNaoPertenceProfessorException e) {
         return ResponseEntity.badRequest().body(Map.of("mensagem", "Sala não pertence ao professor"));
+      } catch (SolicitacaoMatriculaJaExisteException e) {
+        return ResponseEntity.badRequest().body(Map.of("mensagem", "Solicitação de matrícula já existe"));
       } catch (Exception e) {
         e.printStackTrace();
         return ResponseEntity.badRequest().body(Map.of("mensagem", "Internal server error"));
