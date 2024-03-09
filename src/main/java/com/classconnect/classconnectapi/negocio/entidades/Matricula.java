@@ -2,13 +2,18 @@ package com.classconnect.classconnectapi.negocio.entidades;
 
 import java.time.LocalDateTime;
 
+import com.classconnect.classconnectapi.negocio.enums.TipoPerfil;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 
 @Entity
 public class Matricula {
@@ -23,6 +28,10 @@ public class Matricula {
   @ManyToOne
   @JoinColumn(name = "sala_id", referencedColumnName = "id")
   private Sala sala;
+
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  protected TipoPerfil solicitante;
 
   @Column(nullable = true)
   private LocalDateTime dataConfirmacao;
@@ -57,6 +66,21 @@ public class Matricula {
 
   public void setDataConfirmacao(LocalDateTime dataConfirmacao) {
     this.dataConfirmacao = dataConfirmacao;
+  }
+
+  public TipoPerfil getSolicitante() {
+    return solicitante;
+  }
+
+  public void setSolicitante(TipoPerfil solicitante) {
+    this.solicitante = solicitante;
+  }
+
+  @PrePersist
+  public void prePersist() {
+      if (solicitante == null) {
+          solicitante = TipoPerfil.PROFESSOR;
+      }
   }
 
   @Override
