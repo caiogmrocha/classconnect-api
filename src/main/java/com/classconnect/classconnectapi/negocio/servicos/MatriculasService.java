@@ -61,7 +61,11 @@ public class MatriculasService {
       throw new SalaNaoPertenceProfessorException(idSala, idProfessor);
     }
 
-    var matricula = this.matriculasRepository.findBySalaIdAndAlunoIdAndSolicitante(idSala, idAluno, Optional.empty()).orElseThrow(() -> new SolicitacaoMatriculaNaoExiste(idAluno, idSala));
+    var matricula = this.matriculasRepository.findBySalaIdAndAlunoIdAndSolicitante(
+      idSala,
+      idAluno,
+      Optional.empty()
+    ).orElseThrow(() -> new SolicitacaoMatriculaNaoExiste(idAluno, idSala));
 
     if (matricula.getDataConfirmacao() != null) {
       throw new AlunoJaMatriculadoSalaException(idAluno, idSala);
@@ -91,7 +95,11 @@ public class MatriculasService {
       throw new AlunoJaMatriculadoSalaException(idAluno, idSala);
     }
 
-    var solicitacaoMatriculaAnterior = this.matriculasRepository.findBySalaIdAndAlunoIdAndSolicitante(idSala, idAluno, Optional.of(TipoPerfil.ALUNO));
+    var solicitacaoMatriculaAnterior = this.matriculasRepository.findBySalaIdAndAlunoIdAndSolicitante(
+      idSala,
+      idAluno,
+      Optional.of(TipoPerfil.ALUNO)
+    );
 
     if (solicitacaoMatriculaAnterior.isPresent()) {
       this.professorAceitarSolicitacao(idSala, idAluno, idProfessor);
@@ -99,7 +107,11 @@ public class MatriculasService {
       return;
     }
 
-    solicitacaoMatriculaAnterior = this.matriculasRepository.findBySalaIdAndAlunoIdAndSolicitante(idSala, idAluno, Optional.of(TipoPerfil.PROFESSOR));
+    solicitacaoMatriculaAnterior = this.matriculasRepository.findBySalaIdAndAlunoIdAndSolicitante(
+      idSala,
+      idAluno,
+      Optional.of(TipoPerfil.PROFESSOR)
+    );
 
     if (solicitacaoMatriculaAnterior.isPresent()) {
       throw new SolicitacaoMatriculaJaExisteException(idAluno, idSala);
@@ -114,5 +126,27 @@ public class MatriculasService {
     sala.getMatriculas().add(matricula);
 
     this.matriculasRepository.save(matricula);
+  }
+
+  public void alunoAceitarMatricula(Long idSala, Long idAluno) throws SalaNaoExisteException, AlunoNaoExisteException, AlunoJaMatriculadoSalaException, SolicitacaoMatriculaNaoExiste {
+    var sala = this.salasRepository.findById(idSala).orElseThrow(() -> new SalaNaoExisteException(idSala));
+
+    this.alunosRepository.findById(idAluno).orElseThrow(() -> new AlunoNaoExisteException(idAluno));
+
+    var matricula = this.matriculasRepository.findBySalaIdAndAlunoIdAndSolicitante(
+      idSala,
+      idAluno,
+      Optional.of(TipoPerfil.PROFESSOR)
+    ).orElseThrow(() -> new SolicitacaoMatriculaNaoExiste(idAluno, idSala));
+
+    if (matricula.getDataConfirmacao() != null) {
+      throw new AlunoJaMatriculadoSalaException(idAluno, idSala);
+    }
+
+    matricula.setDataConfirmacao(java.time.LocalDateTime.now());
+
+    sala.getMatriculas().add(matricula);
+
+    this.salasRepository.save(sala);
   }
 }
