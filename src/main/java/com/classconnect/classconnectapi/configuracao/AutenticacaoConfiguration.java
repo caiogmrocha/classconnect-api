@@ -79,16 +79,13 @@ public class AutenticacaoConfiguration {
                                                                 "/api/salas/{idSala}/posts/{idPost}/curtidas/curtir")
                                                 .authenticated()
                                                 .requestMatchers(HttpMethod.POST,
-                                                                "/api/salas/{iSala}/convidar/{idAluno}")
+                                                                "/api/salas/{iSala}/matriculas/{idAluno}/convidar")
                                                 .hasRole("PROFESSOR")
                                                 .requestMatchers(HttpMethod.PATCH,
-                                                                "/api/salas/{idSala}/aceitar/{idAluno}")
-                                                .hasRole("PROFESSOR")
+                                                                "/api/salas/{idSala}/matriculas/{idAluno}")
+                                                .authenticated()
                                                 .requestMatchers(HttpMethod.POST,
                                                                 "/api/salas/{iSala}/matriculas/solicitar")
-                                                .hasRole("ALUNO")
-                                                .requestMatchers(HttpMethod.PATCH,
-                                                                "/api/salas/{idSala}/matriculas/aceitar")
                                                 .hasRole("ALUNO")
                                                 .requestMatchers(HttpMethod.DELETE,
                                                                 "/api/salas/{idSala}/matriculas/recusar")
