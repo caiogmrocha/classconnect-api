@@ -132,7 +132,8 @@ public class PostsController {
         )).toArray(Map[]::new),
         "curtidas", post.getCurtidas().size(),
         "anexos", post.getAnexos().stream().map(anexo -> Map.of(
-          "caminho", anexo.getCaminho()
+          "caminho", anexo.getCaminho(),
+          "mimetype", anexo.getMimetype()
         )).toArray(Map[]::new)
       );
 
