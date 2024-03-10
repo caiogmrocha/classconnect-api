@@ -9,7 +9,6 @@ import com.classconnect.classconnectapi.validacao.ValidMimeType;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 public record PublicarPostDTO(
@@ -24,7 +23,6 @@ public record PublicarPostDTO(
     @DateTimeFormat(pattern = "yyyy-MM-dd' 'HH:mm:ss")
     LocalDateTime dataEntrega,
 
-    @NotEmpty(message = "O campo \"arquivos\" é obrigatório")
     @ValidMimeType(value = {
       "text/plain",
       "text/html",

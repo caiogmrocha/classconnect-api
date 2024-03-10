@@ -28,7 +28,7 @@ public class Material {
   @Column(nullable = false)
   protected String titulo;
 
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "TEXT")
   protected String conteudo;
 
   @Column(nullable = false)
