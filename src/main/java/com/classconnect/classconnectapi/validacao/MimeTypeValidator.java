@@ -19,7 +19,7 @@ public class MimeTypeValidator implements ConstraintValidator<ValidMimeType, Mul
   @Override
   public boolean isValid(MultipartFile[] files, ConstraintValidatorContext context) {
     if (files == null) {
-      return false;
+      return true;
     }
 
     for (MultipartFile file : files) {

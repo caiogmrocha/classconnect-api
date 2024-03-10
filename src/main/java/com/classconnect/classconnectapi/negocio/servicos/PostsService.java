@@ -135,31 +135,33 @@ public class PostsService {
 
     List<Anexo> anexos = new ArrayList<Anexo>();
 
-    for (MultipartFile arquivo : publicarPostDTO.arquivos()) {
-      var nomeArquivo = UUID.randomUUID().toString().concat(arquivo.getOriginalFilename().substring(arquivo.getOriginalFilename().lastIndexOf(".")));
-      var localizacaoArquivo = this.fileStorageLocation.resolve(nomeArquivo);
-      String uriArquivo;
+    if (publicarPostDTO.arquivos() != null) {
+      for (MultipartFile arquivo : publicarPostDTO.arquivos()) {
+        var nomeArquivo = UUID.randomUUID().toString().concat(arquivo.getOriginalFilename().substring(arquivo.getOriginalFilename().lastIndexOf(".")));
+        var localizacaoArquivo = this.fileStorageLocation.resolve(nomeArquivo);
+        String uriArquivo;
 
-      try {
-        arquivo.transferTo(localizacaoArquivo);
+        try {
+          arquivo.transferTo(localizacaoArquivo);
 
-        uriArquivo = ServletUriComponentsBuilder
-          .fromCurrentContextPath()
-          .path("api/arquivos")
-          .path(nomeArquivo)
-          .toUriString();
-      } catch (IOException e) {
-        throw new RuntimeException("Erro ao salvar o arquivo", e);
+          uriArquivo = ServletUriComponentsBuilder
+              .fromCurrentContextPath()
+              .path("api/arquivos")
+              .path(nomeArquivo)
+              .toUriString();
+        } catch (IOException e) {
+          throw new RuntimeException("Erro ao salvar o arquivo", e);
+        }
+
+        var anexo = new Anexo();
+
+        anexo.setCaminho(uriArquivo);
+        anexo.setExtensao(uriArquivo.substring(uriArquivo.lastIndexOf(".")));
+        anexo.setMimetype(arquivo.getContentType());
+        anexo.setMaterial(post);
+
+        anexos.add(anexo);
       }
-
-      var anexo = new Anexo();
-
-      anexo.setCaminho(uriArquivo);
-      anexo.setExtensao(uriArquivo.substring(uriArquivo.lastIndexOf(".")));
-      anexo.setMimetype(arquivo.getContentType());
-      anexo.setMaterial(post);
-
-      anexos.add(anexo);
     }
 
     this.anexosRepository.saveAll(anexos);
